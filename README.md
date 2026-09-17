@@ -1,5 +1,8 @@
 # Miku UI Snowland bring-up - Samsung Galaxy S8 (dreamlte)
 
+> **User-facing project:** https://github.com/birowsi/MikuUI-dreamlte  
+> Downloads, installation instructions, build guide and releases are maintained there.
+
 Miku UI Snowland Android 12 / SDK 32 bring-up for the Samsung Galaxy S8.
 
 ## Target
