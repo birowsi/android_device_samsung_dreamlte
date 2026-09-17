@@ -69,6 +69,34 @@ function patch_firmware() {
     mv $1.patched $1
 }
 
+# Add legacy Samsung compatibility shims.
+#
+# universal8895-common normally relies on LineageOS TARGET_LD_SHIM_LIBS.
+# Miku UI's AOSP bionic does not implement that linker extension, so add
+# the shim libraries directly to the affected proprietary ELF blobs.
+function add_needed_if_missing() {
+    local blob="$1"
+    local lib="$2"
+
+    if [ -f "${blob}" ] && ! "${PATCHELF}" --print-needed "${blob}" | grep -Fxq "${lib}"; then
+        "${PATCHELF}" --add-needed "${lib}" "${blob}"
+    fi
+}
+
+add_needed_if_missing "$BLOB_ROOT/lib/libexynoscamera.so" \
+    "/vendor/lib/libexynoscamera_shim.so"
+add_needed_if_missing "$BLOB_ROOT/lib64/libexynoscamera.so" \
+    "/vendor/lib64/libexynoscamera_shim.so"
+
+add_needed_if_missing "$BLOB_ROOT/lib/libblurdetection_interface.so" \
+    "/vendor/lib/idev0_shim.so"
+add_needed_if_missing "$BLOB_ROOT/lib/libfocuspeaking_interface.so" \
+    "/vendor/lib/idev0_shim.so"
+add_needed_if_missing "$BLOB_ROOT/lib64/libblurdetection_interface.so" \
+    "/vendor/lib64/idev0_shim.so"
+add_needed_if_missing "$BLOB_ROOT/lib64/libfocuspeaking_interface.so" \
+    "/vendor/lib64/idev0_shim.so"
+
 # remove RKP crap
 patch_firmware $BLOB_ROOT/vendor/firmware/fimc_is_lib.bin
 patch_firmware $BLOB_ROOT/vendor/firmware/fimc_is_rta_2l2_3h1.bin

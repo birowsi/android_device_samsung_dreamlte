@@ -1,0 +1,34 @@
+// Trust HAL build configuration reused from LineageOS android_vendor_lineage, lineage-19.1.
+// SPDX-License-Identifier: Apache-2.0
+
+soong_config_module_type {
+    name: "trust_usb_control",
+    module_type: "cc_defaults",
+    config_namespace: "lineageGlobalVars",
+    value_variables: [
+        "target_trust_usb_control_path",
+        "target_trust_usb_control_enable",
+        "target_trust_usb_control_disable",
+    ],
+    properties: ["cppflags"],
+}
+
+trust_usb_control {
+    name: "trust_usb_control_defaults",
+    soong_config_variables: {
+        target_trust_usb_control_path: {
+            cppflags: ["-DUSB_CONTROL_PATH=\"%s\""],
+        },
+        target_trust_usb_control_enable: {
+            cppflags: ["-DUSB_CONTROL_ENABLE=\"%s\""],
+        },
+        target_trust_usb_control_disable: {
+            cppflags: ["-DUSB_CONTROL_DISABLE=\"%s\""],
+        },
+    },
+}
+
+// Parsed globally but unused on Exynos; vendor/lineage normally supplies this default.
+cc_defaults {
+    name: "qti_cryptfshw_qsee_defaults",
+}

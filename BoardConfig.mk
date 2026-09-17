@@ -18,6 +18,16 @@
 
 DEVICE_PATH := device/samsung/dreamlte
 
+# Preserve the upstream Trust HAL's configurable USB control interface.
+SOONG_CONFIG_NAMESPACES += lineageGlobalVars
+SOONG_CONFIG_lineageGlobalVars += target_trust_usb_control_path target_trust_usb_control_enable target_trust_usb_control_disable
+TARGET_TRUST_USB_CONTROL_PATH ?= /sys/class/usb_notify/usb_control/disable
+TARGET_TRUST_USB_CONTROL_ENABLE ?= 1
+TARGET_TRUST_USB_CONTROL_DISABLE ?= 0
+SOONG_CONFIG_lineageGlobalVars_target_trust_usb_control_path := $(TARGET_TRUST_USB_CONTROL_PATH)
+SOONG_CONFIG_lineageGlobalVars_target_trust_usb_control_enable := $(TARGET_TRUST_USB_CONTROL_ENABLE)
+SOONG_CONFIG_lineageGlobalVars_target_trust_usb_control_disable := $(TARGET_TRUST_USB_CONTROL_DISABLE)
+
 # Assert
 TARGET_OTA_ASSERT_DEVICE := dreamlte
 
