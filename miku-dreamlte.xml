@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!--
+    Miku UI Snowland / Android 12L bring-up for Samsung Galaxy S8 dreamlte.
+    Tested on SM-G950N.
+  -->
+
+  <remote name="hanbi-github" fetch="https://github.com/" />
+  <remote name="s8-github" fetch="https://github.com/" />
+
+  <!-- Replace Miku platform components that require dreamlte compatibility patches. -->
+  <remove-project name="platform_build" />
+  <remove-project name="platform_device_miku_sepolicy" />
+
+  <project
+      path="build/make"
+      name="birowsi/platform_build"
+      remote="hanbi-github"
+      revision="miku-snowland" />
+
+  <project
+      path="device/miku/sepolicy"
+      name="birowsi/platform_device_miku_sepolicy"
+      remote="hanbi-github"
+      revision="miku-snowland" />
+
+  <!-- Legacy DT boot header support required by Exynos 8895. -->
+  <remove-project name="platform/system/tools/mkbootimg" />
+
+  <project
+      path="system/tools/mkbootimg"
+      name="LineageOS/android_system_tools_mkbootimg"
+      remote="s8-github"
+      revision="e8b10356a6335b29b3e7fa044bf271d385826b55"
+      upstream="refs/heads/lineage-19.1" />
+
+  <!-- Conflicting Miku/AOSP projects replaced with Lineage variants. -->
+  <remove-project name="platform/external/ant-wireless/ant_client" />
+  <remove-project name="platform/external/ant-wireless/ant_native" />
+  <remove-project name="platform/external/ant-wireless/ant_service" />
+  <remove-project name="platform/external/ant-wireless/hidl" />
+  <remove-project name="platform/vendor/qcom-opensource/audio" />
+  <remove-project name="platform/vendor/qcom-opensource/thermal-engine" />
+  <remove-project name="platform/vendor/qcom-opensource/healthd-ext" />
+
+  <!-- dreamlte Miku UI device trees. -->
+  <project
+      path="device/samsung/dreamlte"
+      name="birowsi/android_device_samsung_dreamlte"
+      remote="hanbi-github"
+      revision="miku-snowland" />
+
+  <project
+      path="device/samsung/universal8895-common"
+      name="birowsi/android_device_samsung_universal8895-common"
+      remote="hanbi-github"
+      revision="miku-snowland" />
+
+  <!-- Samsung Exynos 8895 dependencies. -->
+  <project
+      path="kernel/samsung/universal8895"
+      name="8890q/android_kernel_samsung_universal8895"
+      remote="s8-github"
+      revision="76ccdeff9dac383738bb47d15db9b4ca2556376f"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="vendor/samsung"
+      name="8890q/proprietary_vendor_samsung"
+      remote="s8-github"
+      revision="4ed49bc12141db5c30d3e5f299b54ad83d0d49f0"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="device/samsung_slsi/sepolicy"
+      name="LineageOS/android_device_samsung_slsi_sepolicy"
+      remote="s8-github"
+      revision="b86bdaaa5aef70c51d28bc882b9867c3e88dd57d"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung"
+      name="LineageOS/android_hardware_samsung"
+      remote="s8-github"
+      revision="340c2b58099de516e76d33b1f10578e33df44f90"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung_slsi-linaro/config"
+      name="8890q/android_hardware_samsung_slsi-linaro_config"
+      remote="s8-github"
+      revision="99f70404432d35b38eef86d29a68858ae55559b1"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung_slsi-linaro/exynos"
+      name="8890q/android_hardware_samsung_slsi-linaro_exynos"
+      remote="s8-github"
+      revision="c04e384bc671c8aa490dfb031af5fc5551490b28"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung_slsi-linaro/exynos5"
+      name="8890q/android_hardware_samsung_slsi-linaro_exynos5"
+      remote="s8-github"
+      revision="dd2f9115c2fcb8767a9766da898f06b657872997"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung_slsi-linaro/graphics"
+      name="8890q/android_hardware_samsung_slsi-linaro_graphics"
+      remote="s8-github"
+      revision="400aaac267c6e5a8f8a3ad747d9b64a2d2cd281a"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="hardware/samsung_slsi-linaro/openmax"
+      name="8890q/android_hardware_samsung_slsi-linaro_openmax"
+      remote="s8-github"
+      revision="509019f59bf3de7633e0914718a7d001fd84888d"
+      upstream="refs/heads/lineage-19.1" />
+
+  <!-- ANT+. -->
+  <project
+      path="external/ant-wireless/ant_client"
+      name="LineageOS/android_external_ant-wireless_ant_client"
+      remote="s8-github"
+      revision="049aa4b92f9438dd8f4e70fe867992871a3b2bde"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="external/ant-wireless/ant_native"
+      name="LineageOS/android_external_ant-wireless_ant_native"
+      remote="s8-github"
+      revision="57ee3eee92469894b5e41924190c284ba2dd301f"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="external/ant-wireless/ant_service"
+      name="LineageOS/android_external_ant-wireless_ant_service"
+      remote="s8-github"
+      revision="3fb533e0f01fd08c729554d8a10d092a051d3b1c"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="external/ant-wireless/hidl"
+      name="LineageOS/android_external_ant-wireless_hidl"
+      remote="s8-github"
+      revision="d9f8441d418c9dbf469accaba0e2447509330567"
+      upstream="refs/heads/lineage-19.1" />
+
+  <!-- Qualcomm compatibility dependencies used by the common tree. -->
+  <project
+      path="vendor/qcom/opensource/audio"
+      name="LineageOS/android_vendor_qcom_opensource_audio"
+      remote="s8-github"
+      revision="2602d987f4ba5eec08bda3b85ca6419af74f0a71"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="vendor/qcom/opensource/thermal-engine"
+      name="LineageOS/android_vendor_qcom_opensource_thermal-engine"
+      remote="s8-github"
+      revision="fdf8503199cc34e2c03c0151881fb659e574ebb9"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="vendor/qcom/opensource/healthd-ext"
+      name="LineageOS/android_vendor_qcom_opensource_healthd-ext"
+      remote="s8-github"
+      revision="0db5869095b59942cc0d89caed6dc0842b507a52"
+      upstream="refs/heads/lineage-19.1" />
+
+  <!-- Lineage hardware APIs required by the 8895 common tree. -->
+  <project
+      path="hardware/lineage/interfaces"
+      name="LineageOS/android_hardware_lineage_interfaces"
+      remote="s8-github"
+      revision="16c1445eb1a8f9e9dd9397b11e8d016a05efd556"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="device/lineage/sepolicy"
+      name="LineageOS/android_device_lineage_sepolicy"
+      remote="s8-github"
+      revision="0ece4d9fd0fc05129d8120d26083edd6ad106ec7"
+      upstream="refs/heads/lineage-19.1" />
+
+  <project
+      path="packages/resources/devicesettings"
+      name="LineageOS/android_packages_resources_devicesettings"
+      remote="s8-github"
+      revision="39c1ece23e5bbac066ee09bfec6233f8b191d2a6"
+      upstream="refs/heads/lineage-19.1" />
+</manifest>
