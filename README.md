@@ -1,148 +1,104 @@
-# Miku UI Snowland bring-up - Samsung Galaxy S8 (dreamlte)
+# Samsung Galaxy S8 (dreamlte) - Miku UI Snowland
 
-> **User-facing project:** https://github.com/birowsi/MikuUI-dreamlte  
-> Downloads, installation instructions, build guide and releases are maintained there.
+Device tree for Miku UI Snowland on the Samsung Galaxy S8.
 
-Miku UI Snowland Android 12 / SDK 32 bring-up for the Samsung Galaxy S8.
+Main project, builds and installation instructions:
+
+https://github.com/birowsi/MikuUI-dreamlte
 
 ## Target
 
 - Device: Samsung Galaxy S8
-- Model: SM-G950N
+- Model tested: SM-G950N
+- Codename: `dreamlte`
 - SoC: Exynos 8895
-- Codename: dreamlte
-- Android: 12
-- SDK: 32
-- Build variant: userdebug / UNOFFICIAL
-- Partition layout: legacy A-only
+- Android: 12L / SDK 32
+- Build: `miku_dreamlte-userdebug`
+- Legacy A-only layout
 
-## Current status
+## Status
 
-Working and tested on device:
+Working:
 
 - Boot / System UI
 - Wi-Fi
 - Bluetooth
-- Rear camera
-- Front camera
-- Automatic rotation
+- Camera
+- Rotation
 - Fingerprint
-- Speaker
-- Microphone
-- Wired headset audio
-- Wired charging
-- Wireless charging
+- Speaker / microphone
+- Wired headset
+- Wired and wireless charging
 - USB MTP / ADB
-- Google SetupWizard
-- Google Play Store / GMS / GSF
-- Touch sounds disabled by default
+- Google services
 
-Not fully verified yet:
+Not verified:
 
-- GNSS / GPS fix
-- NFC tag operation
+- GPS / GNSS fix
+- NFC tags
 
-Cellular functionality is intentionally outside the scope of this bring-up.
+Cellular support is excluded from this port.
 
-## Camera compatibility
+## Camera
 
-Samsung camera blobs depend on legacy symbols normally supplied through
-LineageOS `TARGET_LD_SHIM_LIBS`.
+Miku UI does not use LineageOS `TARGET_LD_SHIM_LIBS`.
 
-Miku UI does not implement that linker shim mechanism, so the required
-compatibility libraries are added directly as DT_NEEDED dependencies
-during proprietary blob extraction.
+`extract-files.sh` adds the required shim libraries as DT_NEEDED
+dependencies during blob extraction.
 
-### libexynoscamera
+`libexynoscamera_shim.so`:
 
-32-bit:
+```text
+vendor/lib/libexynoscamera.so
+vendor/lib64/libexynoscamera.so
+```
 
-    lib/libexynoscamera.so
-        -> /vendor/lib/libexynoscamera_shim.so
+`idev0_shim.so`:
 
-64-bit:
+```text
+vendor/lib/libblurdetection_interface.so
+vendor/lib/libfocuspeaking_interface.so
+vendor/lib64/libblurdetection_interface.so
+vendor/lib64/libfocuspeaking_interface.so
+```
 
-    lib64/libexynoscamera.so
-        -> /vendor/lib64/libexynoscamera_shim.so
+## Display / HWC
 
-This fixes the missing legacy `CameraParameters` symbols including
-`EFFECT_POINT_BLUE`.
+The universal8895-common extraction script adds
+`libexynosdisplay_shim.so` to:
 
-### BlurDetection / FocusPeaking
+```text
+vendor/lib/libexynosdisplay.so
+vendor/lib/hw/hwcomposer.exynos5.so
+vendor/lib64/libexynosdisplay.so
+vendor/lib64/hw/hwcomposer.exynos5.so
+```
 
-The Samsung OpenCV camera plugins require `__aeabi_idiv0`.
+This is required for stable HWC operation and rotation.
 
-The following blobs are patched to load `idev0_shim.so`:
+## Miku UI
 
-    lib/libblurdetection_interface.so
-    lib/libfocuspeaking_interface.so
-    lib64/libblurdetection_interface.so
-    lib64/libfocuspeaking_interface.so
+Product:
 
-The extraction script checks existing DT_NEEDED entries before patching,
-so repeated extraction does not add duplicate dependencies.
+```text
+miku_dreamlte-userdebug
+```
 
-## Exynos display / HWC compatibility
+GApps:
 
-Rotation originally caused `vendor.hwcomposer-2-2` to crash with SIGSEGV,
-which restarted SurfaceFlinger and zygote.
+```makefile
+MIKU_GAPPS := true
+```
 
-The Exynos display stack also relied on LineageOS `TARGET_LD_SHIM_LIBS`.
+First-boot defaults:
 
-The common-device extraction script now adds
-`libexynosdisplay_shim.so` directly to:
+```text
+ro.setupwizard.mode=OPTIONAL
+def_sound_effects_enabled=false
+```
 
-32-bit:
+## Proprietary blobs
 
-    vendor/lib/libexynosdisplay.so
-    vendor/lib/hw/hwcomposer.exynos5.so
+Modified Samsung proprietary binaries are not stored in this repository.
 
-64-bit:
-
-    vendor/lib64/libexynosdisplay.so
-    vendor/lib64/hw/hwcomposer.exynos5.so
-
-Runtime testing with the patched blobs confirms stable portrait and
-landscape rotation with no HWC / SurfaceFlinger restart.
-
-The extraction-time implementation is located in:
-
-    device/samsung/universal8895-common/extract-files.sh
-
-## Miku UI build integration
-
-The device product is exposed as:
-
-    miku_dreamlte-userdebug
-
-Miku UI product configuration and bundled GApps are enabled through:
-
-    MIKU_GAPPS := true
-    vendor/miku/build/product/miku_product.mk
-
-The device also provides local Soong compatibility definitions required
-by the imported LineageOS-era device configuration.
-
-## First-boot defaults
-
-Touch sounds are disabled through the dreamlte SettingsProvider overlay:
-
-    def_sound_effects_enabled=false
-
-Google SetupWizard remains available for Wi-Fi and initial provisioning,
-but optional setup flows can be skipped:
-
-    ro.setupwizard.mode=OPTIONAL
-
-Both settings were verified in the generated image and on a clean
-real-device installation.
-
-Android's default backup setting remains disabled.
-
-## Notes
-
-The proprietary Samsung blobs themselves are not included in this device
-repository.
-
-Compatibility modifications are implemented in extraction scripts rather
-than publishing modified proprietary binaries.
+Required compatibility patches are applied by the extraction scripts.
